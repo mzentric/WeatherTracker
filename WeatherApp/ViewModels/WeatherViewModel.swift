@@ -1,33 +1,36 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 class WeatherViewModel: ObservableObject {
     @Published var searchText = ""
     @Published var weather: WeatherModel?
     @Published var isLoading = false
     @Published var searchResults: [WeatherSearchResult] = []
+    @Published var error: Error?
     
-    // This is a mock implementation. You'll want to replace this with actual API calls
+    private let weatherService = WeatherService()
+    
     func searchCity() {
-        isLoading = true
+        guard !searchText.isEmpty else {
+            searchResults = []
+            return
+        }
         
-        // Simulate network delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            if !self.searchText.isEmpty {
-                // Mock search results - replace with actual API call
-                self.searchResults = [
-                    WeatherSearchResult(cityName: "\(self.searchText) City", temperature: 20.0, iconName: "sun.max.fill"),
-                    WeatherSearchResult(cityName: "\(self.searchText) Town", temperature: 18.5, iconName: "cloud.sun.fill"),
-                    WeatherSearchResult(cityName: "\(self.searchText) Village", temperature: 22.3, iconName: "cloud.fill")
-                ]
-            } else {
-                self.searchResults = []
+        Task {
+            do {
+                isLoading = true
+                searchResults = try await weatherService.searchCities(query: searchText)
+                isLoading = false
+            } catch {
+                self.error = error
+                isLoading = false
             }
-            self.isLoading = false
         }
     }
     
     func selectCity(_ searchResult: WeatherSearchResult) {
+        // We'll implement this next with the current weather API
         weather = WeatherModel(
             cityName: searchResult.cityName,
             temperature: searchResult.temperature,

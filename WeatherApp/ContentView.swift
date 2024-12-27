@@ -76,9 +76,6 @@ struct ContentView: View {
                 }
             }
         }
-        .onAppear {
-            Font.listAllFonts()
-        }
     }
 }
 

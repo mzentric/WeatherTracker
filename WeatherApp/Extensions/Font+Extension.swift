@@ -1,15 +1,6 @@
 import SwiftUI
 
 extension Font {
-    static func listAllFonts() {
-        for family in UIFont.familyNames.sorted() {
-            print("Family: \(family)")
-            for name in UIFont.fontNames(forFamilyName: family).sorted() {
-                print("   Font: \(name)")
-            }
-        }
-    }
-    
     static func poppinsRegular(size: CGFloat) -> Font {
         .custom("Poppins-Regular", size: size)
     }

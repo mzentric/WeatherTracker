@@ -10,6 +10,26 @@ class WeatherViewModel: ObservableObject {
     @Published var error: Error?
     
     private let weatherService = WeatherService()
+    private let storageService = StorageService()
+    
+    init() {
+        Task {
+            await loadSavedCity()
+        }
+    }
+    
+    private func loadSavedCity() async {
+        if let savedCity = storageService.getSelectedCity() {
+            do {
+                isLoading = true
+                weather = try await weatherService.getCurrentWeather(for: savedCity)
+                isLoading = false
+            } catch {
+                self.error = error
+                isLoading = false
+            }
+        }
+    }
     
     func searchCity() {
         guard !searchText.isEmpty else {
@@ -30,16 +50,18 @@ class WeatherViewModel: ObservableObject {
     }
     
     func selectCity(_ searchResult: WeatherSearchResult) {
-        // We'll implement this next with the current weather API
-        weather = WeatherModel(
-            cityName: searchResult.cityName,
-            temperature: searchResult.temperature,
-            iconName: searchResult.iconName,
-            humidity: 84,
-            uvIndex: 3,
-            feelsLike: searchResult.temperature + 2
-        )
-        searchResults = []
-        searchText = ""
+        Task {
+            do {
+                isLoading = true
+                weather = try await weatherService.getCurrentWeather(for: searchResult.cityName)
+                storageService.saveSelectedCity(cityName: searchResult.cityName)
+                searchResults = []
+                searchText = ""
+                isLoading = false
+            } catch {
+                self.error = error
+                isLoading = false
+            }
+        }
     }
 } 

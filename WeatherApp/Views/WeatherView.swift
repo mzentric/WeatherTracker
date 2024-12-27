@@ -5,9 +5,10 @@ struct WeatherView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: weather.iconName)
-                .font(.system(size: 120))
-                .symbolRenderingMode(.multicolor)
+            Image(weather.iconName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
             
             HStack(spacing: 8) {
                 Text(weather.cityName)
@@ -20,7 +21,7 @@ struct WeatherView: View {
             }
             
             HStack(alignment: .top, spacing: 0) {
-                Text("\(Int(round(weather.temperature)))")
+                Text("\(Int(weather.temperature.isNaN ? 0 : round(weather.temperature)))")
                     .font(.custom("Poppins-Medium", size: 70))
                 Text("°")
                     .font(.custom("Poppins-Medium", size: 30))
@@ -33,7 +34,7 @@ struct WeatherView: View {
                 
                 WeatherDataItem(title: "UV Index", value: "\(weather.uvIndex)")
                 
-                WeatherDataItem(title: "Feels Like", value: "\(Int(round(weather.feelsLike)))°")
+                WeatherDataItem(title: "Feels Like", value: "\(Int(weather.feelsLike.isNaN ? 0 : round(weather.feelsLike)))°")
             }
             .padding(.vertical, 12)
             .padding(.horizontal, 20)

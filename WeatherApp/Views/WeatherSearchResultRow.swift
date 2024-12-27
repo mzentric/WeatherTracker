@@ -10,7 +10,7 @@ struct WeatherSearchResultRow: View {
                     .font(.custom("Poppins-SemiBold", size: 20))
                     .foregroundColor(.blackMountain)
                 HStack(alignment: .top, spacing: 0) {
-                    Text("\(Int(round(result.temperature)))")
+                    Text("\(Int(result.temperature.isNaN ? 0 : round(result.temperature)))")
                         .font(.custom("Poppins-Medium", size: 60))
                         .foregroundColor(.blackMountain)
                     Text("°")
@@ -22,9 +22,10 @@ struct WeatherSearchResultRow: View {
             
             Spacer()
             
-            Image(systemName: result.iconName)
-                .font(.system(size: 80))
-                .symbolRenderingMode(.multicolor)
+            Image(result.iconName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 80)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)

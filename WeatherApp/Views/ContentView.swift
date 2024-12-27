@@ -40,7 +40,7 @@ struct ContentView: View {
             .padding(.top)
             
             // Search Results
-            if !viewModel.searchResults.isEmpty {
+            if !viewModel.searchText.isEmpty && !viewModel.searchResults.isEmpty {
                 List(viewModel.searchResults) { result in
                     WeatherSearchResultRow(result: result)
                         .listRowSeparator(.hidden)
@@ -50,6 +50,9 @@ struct ContentView: View {
                 }
                 .listStyle(.plain)
                 .padding(.top, 10)
+            } else if !viewModel.searchText.isEmpty && viewModel.searchResults.isEmpty {
+                // Show blank screen with no results
+                Spacer()
             } else {
                 Spacer()
                 
@@ -62,7 +65,7 @@ struct ContentView: View {
                     Spacer()
                     Spacer()
                 } else {
-                    // No city selected state
+                    // No city selected (initial state)
                     VStack(spacing: 10) {
                         Text("No City Selected")
                             .font(.custom("Poppins-SemiBold", size: 30))

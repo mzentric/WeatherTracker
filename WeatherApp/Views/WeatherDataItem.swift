@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct WeatherDataItem: View {
@@ -8,10 +7,11 @@ struct WeatherDataItem: View {
     var body: some View {
         VStack(spacing: 8) {
             Text(title)
-                .font(.system(size: 12))
+                .font(.custom("Poppins-Regular", size: 12))
                 .foregroundColor(.gray)
             Text(value)
-                .font(.system(size: 16, weight: .medium))
+                .font(.custom("Poppins-Medium", size: 16))
+                .foregroundColor(.gray)
         }
         .frame(minWidth: 80)
     }
